@@ -29,6 +29,7 @@ Connect to the damn internet
   -x       Revert to real MAC and close connection
   -r       Refresh connection
   -m       Get MAC
+  -f       Find connections (scan)
 EOF
     exit 0
 }
@@ -36,7 +37,7 @@ EOF
 # print help with no arguments
 [[ $# -eq 0 ]] && usage
 
-while getopts "hjurms:x" opt; do
+while getopts "hjurms:xf" opt; do
     case $opt in
         h)
             usage
@@ -73,6 +74,9 @@ while getopts "hjurms:x" opt; do
             dhcpcd -x wlan0
             sleep 1s
             ip link set dev wlan0 up
+            ;;
+        f)
+            iw dev wlan0 scan
             ;;
     esac 
 done

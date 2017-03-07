@@ -3,9 +3,11 @@ cat << EOF
 Do things with pdfs
   -x N N IN OUT  extract pages from a pdf
   -j             join many pdfs together
+  -i             join many images together
 Examples
   pdf.sh -x 5 7 in.pdf out.pdf 
   pdf.sh -j in1.pdf in2.pdf 
+  pdf.sh -i *.jpg out.pdf
 EOF
     exit 0
 }
@@ -34,8 +36,8 @@ err (){
     exit 1
 }
 
-x=0 j=0
-while getopts "hxj" opt; do
+x=0 j=0 i=0
+while getopts "hxji" opt; do
     case $opt in
         h)
             usage ;;
@@ -44,6 +46,9 @@ while getopts "hxj" opt; do
             shift ;;
         j)
             j=1
+            shift ;;
+        i)
+            i=1
             shift ;;
         ?)
             err "Unrecognized argument"
@@ -58,5 +63,7 @@ then
 elif [[ $j -eq 1 ]]
 then
     p_join $@
+elif [[ $i -eq 1 ]]
+then
+    convert $@
 fi
-

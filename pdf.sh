@@ -4,10 +4,13 @@ Do things with pdfs
   -x N N IN OUT  extract pages from a pdf
   -j             join many pdfs together
   -i             join many images together
+  -p             extract images from a pdf
 Examples
   pdf.sh -x 5 7 in.pdf out.pdf 
   pdf.sh -j in1.pdf in2.pdf 
   pdf.sh -i *.jpg out.pdf
+  pdf.sh -p in.pdf <prefix> 
+  pdf.sh -p -png in.pdf <prefix> 
 EOF
     exit 0
 }
@@ -37,7 +40,7 @@ err (){
 }
 
 x=0 j=0 i=0
-while getopts "hxji" opt; do
+while getopts "hxjip" opt; do
     case $opt in
         h)
             usage ;;
@@ -49,6 +52,9 @@ while getopts "hxji" opt; do
             shift ;;
         i)
             i=1
+            shift ;;
+        p)
+            p=1
             shift ;;
         ?)
             err "Unrecognized argument"
@@ -66,4 +72,10 @@ then
 elif [[ $i -eq 1 ]]
 then
     convert $@
+elif [[ $p -eq 1 ]]
+then
+    pdfimages $@
+else
+    echo "No command given" > /dev/stderr
+    exit 1
 fi
